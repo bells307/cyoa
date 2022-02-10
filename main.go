@@ -3,19 +3,21 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"gophercises/adventure/handler"
+	"gophercises/adventure/cli"
+	"gophercises/adventure/server"
 	"gophercises/adventure/story"
 	"log"
-	"net/http"
 	"os"
 )
 
 var (
-	file string
+	file        string
+	runAsServer bool
 )
 
 func init() {
 	flag.StringVar(&file, "f", "gopher.json", "Data file path")
+	flag.BoolVar(&runAsServer, "s", true, "Run as server")
 	flag.Parse()
 }
 
@@ -25,16 +27,19 @@ func main() {
 		log.Fatalf("Error while reading %s: %v", file, err)
 	}
 
-	var storyParts map[string]story.StoryPart = make(map[string]story.StoryPart)
-	err = json.Unmarshal(data, &storyParts)
+	var sp story.StoryPartMap = make(story.StoryPartMap)
+	err = json.Unmarshal(data, &sp)
 	if err != nil {
 		log.Fatalf("Error while parsing %s: %v", file, err)
 	}
 
-	s := &http.Server{
-		Addr:    ":8080",
-		Handler: handler.NewRouteHandler(storyParts),
+	if runAsServer {
+		log.Println("Running application as server")
+		if err = server.Run(sp); err != nil {
+			log.Fatalf("Error running as server: %v", err)
+		}
+	} else {
+		log.Println("Running application as CLI")
+		cli.Run(sp)
 	}
-
-	log.Fatal(s.ListenAndServe())
 }

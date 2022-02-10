@@ -1,5 +1,7 @@
 package story
 
+type StoryPartMap = map[string]StoryPart
+
 type StoryPart struct {
 	Title   string   `json:"title"`
 	Story   []string `json:"story"`
