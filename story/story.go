@@ -1,12 +1,16 @@
 package story
 
-type StoryPartMap = map[string]StoryPart
+type ArcMap = map[string]Arc
 
-type StoryPart struct {
-	Title   string   `json:"title"`
-	Story   []string `json:"story"`
-	Options []struct {
+type (
+	Arc struct {
+		Title   string   `json:"title"`
+		Story   []string `json:"story"`
+		Options []Option `json:"options"`
+	}
+
+	Option struct {
 		Text string `json:"text"`
 		Arc  string `json:"arc"`
-	} `json:"options"`
-}
+	}
+)

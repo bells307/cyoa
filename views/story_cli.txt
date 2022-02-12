@@ -1,0 +1,11 @@
+{{.Title}}
+----------
+{{range .Story}}
+{{.}}
+{{end}}
+{{if .Options}}
+Options:
+{{range .Options}}
+	- {{.Text}}
+{{end}}
+{{end}}
